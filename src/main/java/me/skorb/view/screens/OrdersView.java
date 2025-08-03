@@ -1118,10 +1118,12 @@ public class OrdersView extends GridPane {
 
     private void initLayout() {
         HBox topButtonBox = new HBox(10, newOrderButton);
-        VBox container = new VBox(10, topButtonBox, ordersTable);
-        add(container, 0, 0);
         setVgrow(ordersTable, Priority.ALWAYS);
         setHgrow(ordersTable, Priority.ALWAYS);
+        VBox container = new VBox(10, topButtonBox, ordersTable);
+        GridPane.setVgrow(container, Priority.ALWAYS);     // чтобы VBox росла внутри GridPane
+        GridPane.setHgrow(container, Priority.ALWAYS);
+        add(container, 0, 0);
         setPrefWidth(Double.MAX_VALUE); // Ensure mainPane itself stretches across the full window width
     }
 
