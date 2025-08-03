@@ -118,7 +118,7 @@ public class ViewUtils {
         }
     }
 
-    // We want to make sure that we aren't saving empty String to DB.
+    // We want to make sure that we aren't saving empty Strings to DB.
     // We are saving NULL values instead.
     public static String getValueOrDefaultNull(TextField textField) {
         String value = textField.getText();
@@ -252,7 +252,7 @@ public class ViewUtils {
                 String lastName = lastNameField.getText();
                 String phone = phoneField.getText();
 
-                // Other fields are not required fields, so we accept NULL
+                // Other fields are not required fields, so we accept NULLs
                 String address = getValueOrDefaultNull(addressField);
                 String city = getValueOrDefaultNull(cityField);
                 Customer.State state = stateComboBox.getValue();
@@ -379,11 +379,14 @@ public class ViewUtils {
 
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == saveButtonType) {
-                Make selectedMake = (newVehicleMakeCombo.getValue() == null) ? null : MAKE_SERVICE.getMakeByName(newVehicleMakeCombo.getValue());
-                Model selectedModel = (newVehicleModelCombo.getValue() == null) ? null : MODEL_SERVICE.getModelByNameAndMake(newVehicleModelCombo.getValue(), selectedMake);
-                Integer newVehicleYear = (newVehicleYearCombo.getValue() == null) ? null : Integer.parseInt(newVehicleYearCombo.getValue());
-                String newVehicleVin = (newVehicleVinField.getText() == null) ? null : newVehicleVinField.getText().trim();
-                String newVehicleLicensePlate = (newVehicleLicensePlateField.getText() == null || newVehicleLicensePlateField.getText().isEmpty()) ? null : newVehicleLicensePlateField.getText().trim();
+                // At this point we are sure that required fields are not empty, so it's not necessary to check them here again
+                Make selectedMake = MAKE_SERVICE.getMakeByName(newVehicleMakeCombo.getValue());
+                Model selectedModel = MODEL_SERVICE.getModelByNameAndMake(newVehicleModelCombo.getValue(), selectedMake);
+                Integer newVehicleYear = Integer.parseInt(newVehicleYearCombo.getValue());
+
+                // These are optional fields
+                String newVehicleVin = getValueOrDefaultNull(newVehicleVinField);
+                String newVehicleLicensePlate = getValueOrDefaultNull(newVehicleLicensePlateField);
 
                 Vehicle newVehicle = new Vehicle();
                 newVehicle.setCustomerId(customer.getId());
